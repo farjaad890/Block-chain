@@ -2,31 +2,39 @@ import logo from "./assets/MetaMask_Fox.svg.png";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { useState } from "react";
 import Form from "./component/form";
+
+// global variables
 let provider;
 let accounts;
 let chainId;
 function App() {
   const [address, setAddress] = useState();
   const [error, setError] = useState();
-  const [netWork, setNetwork] = useState();
+  const [netWork, setNetwork] = useState(false);
+
+  //function to check if we are on the goreli network or not
   async function checkNetwork() {
-    chainId = await provider.request({ method: "eth_chainId" });
-    if (chainId === "0x5") {
-      setNetwork(true);
+    try {
+      chainId = await provider.request({ method: "eth_chainId" });
+      if (chainId === "0x5") {
+        setNetwork(true);
+      }
+    } catch (error) {
+      setError(error);
     }
   }
 
+  //function to connect to meta mask
   async function connectToMetamask() {
     try {
+      //to check if metamask is installed or not
       provider = await detectEthereumProvider();
+      //get user active account
       accounts = await provider.request({ method: "eth_requestAccounts" });
-      //console.log(chainId);
-      //console.log(accounts);
       setAddress(accounts[0]);
       setError(null);
       checkNetwork();
     } catch (error) {
-      //return <p>{error.message}</p>;
       setError(error.message);
     }
   }
@@ -60,7 +68,8 @@ function App() {
               <div>
                 <p>Your are not connected to goreli network</p>
                 <button
-                  className="w-full bg-green-500 mt-2 mb-2 h-10"
+                  className="w-full mt-2 mb-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                  //className="w-full bg-green-500 mt-2 mb-2 h-10"
                   onClick={() => {
                     checkNetwork();
                   }}

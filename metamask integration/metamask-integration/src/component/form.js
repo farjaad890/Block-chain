@@ -9,32 +9,32 @@ const LoginForm = (props) => {
   const [error, setError] = useState("");
   const [transaction, setTransaction] = useState({});
 
+  //this is a async function to get the information of the transaction through transaction hash
   async function getTransactionreceipt(hash) {
     try {
       const transactionObject = await provider.request({
         method: "eth_getTransactionByHash",
         params: [`${hash}`],
       });
-      setTransaction({
-        from: transactionObject.from,
-        to: transactionObject.to,
-        gasUsed: converter.hexToDec(transactionObject.gas),
-        hash: hash,
-      });
+      return transactionObject;
     } catch (error) {
       setError(error);
     }
   }
+  //function to conver the amount gives to wei smallest unit
   function convertTowei(value) {
     //console.log(value);
     let wei = 1000000000000000000 * value;
     return wei;
   }
+
+  //transfer function is called when the transfers button is clucked on the screen
   async function tranfer() {
     try {
+      //first the amount is converted from text to float
       let calculatedWei = convertTowei(parseFloat(amount));
-      //console.log(calculatedWei);
-      //console.log(calculatedWei.toString(16));
+
+      //eth_sendTransaction returns the transaction hash
       const transactionHash = await provider.request({
         method: "eth_sendTransaction",
         params: [
@@ -45,7 +45,15 @@ const LoginForm = (props) => {
           },
         ],
       });
-      getTransactionreceipt(transactionHash);
+      //hash is send to the getReceipt function to get transaction information
+      const transactionObject = await getTransactionreceipt(transactionHash);
+      //object is set to display on the screen
+      setTransaction({
+        from: transactionObject.from,
+        to: transactionObject.to,
+        gasUsed: converter.hexToDec(transactionObject.gas),
+        hash: transactionObject.hash,
+      });
       setAmount("");
       setReceiver("");
     } catch (error) {
