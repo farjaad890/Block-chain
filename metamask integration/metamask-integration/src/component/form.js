@@ -3,11 +3,15 @@ import { useState } from "react";
 var converter = require("hex2dec");
 
 const LoginForm = (props) => {
-  const { sender, provider } = props;
+  const { sender, provider, checkNetwork } = props;
   const [receiver, setReceiver] = useState("");
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
   const [transaction, setTransaction] = useState({});
+
+  provider.on("chainChanged", function (chainId) {
+    checkNetwork();
+  });
 
   //this is a async function to get the information of the transaction through transaction hash
   async function getTransactionreceipt(hash) {
@@ -16,6 +20,7 @@ const LoginForm = (props) => {
         method: "eth_getTransactionByHash",
         params: [`${hash}`],
       });
+      setError("");
       return transactionObject;
     } catch (error) {
       setError(error);
@@ -33,7 +38,6 @@ const LoginForm = (props) => {
     try {
       //first the amount is converted from text to float
       let calculatedWei = convertTowei(parseFloat(amount));
-
       //eth_sendTransaction returns the transaction hash
       const transactionHash = await provider.request({
         method: "eth_sendTransaction",
@@ -56,6 +60,7 @@ const LoginForm = (props) => {
       });
       setAmount("");
       setReceiver("");
+      setError("");
     } catch (error) {
       setError(error.message);
     }

@@ -1,0 +1,36 @@
+Create a wallet:
+	Metamask allows user to create wallet. install metamask extension to your preferred  browser.
+	After following the easy steps a secret phase unique pahse is generated. 
+	it is recommended to save your secret phrase securely and do not share it with anyone as it can be used to gain access to your wallet.
+Network options:
+	Metamask allows to user to switch between networks of mainnet like etherium but also allows the user to connect to test net like goreli and sepolia.
+	with connection to testnet the user can easily test out his Dapp which he has created without spending any real money. 
+Connect to Ganache:
+	Ganache is a local blockcahin which is used to create Ethereum development network it can be used to to test dapp in a secure and test enviornment.
+	Metamsk can easily be connected to ganache by entering their secret phase in the account and key setting.
+Clear transaction Queue:
+	Metamask has the functionality to clear its trnsaction queue.
+Detect Metmask:
+	There are two ways to detect if the Metamask is installed on the browser:
+		1) window.ethreum in users browser indicates an ethreum user. to differentiate Metamask 
+		from others use window.ethereum.isMetaMask property.
+		2)(Recommended)@metamask/detect-provider
+		this module is used to detect Metamsk ethereum provider on any platform.
+		install this module with command npm i @metamask/detect-provider
+Detect a user Network:
+	eth_chainId: is an rpc method to to check on which network the user is connected to.
+	Return the chain ID of the current network. It does not tke any parameters.
+	
+	We can listen to chainChanged provider event to detect network changes.
+Access a user's accounts:
+	 	To connect the dapp to the users account to perform eth_requestAccounts RPC method.
+	 	
+	 	percautions:
+		Only initiate a connection request in response to direct user action, such as selecting a connect button.							
+    		Always disable the connect button while the connection request is pending.
+    		Never initiate a connection request on page load.
+Metamask SDK:
+	MetaMask SDK provides a reliable, secure, and seamless connection from your dapp to a MetaMask wallet client.
+	how it works:
+	When a user accesses your web dapp on a desktop browser that doesn't have the MetaMask extension installed, a popup appears that prompts the user to either install the MetaMask extension or connect to MetaMask Mobile using a QR code.
+	

@@ -18,6 +18,9 @@ function App() {
       chainId = await provider.request({ method: "eth_chainId" });
       if (chainId === "0x5") {
         setNetwork(true);
+        setError(null);
+      } else {
+        setNetwork(false);
       }
     } catch (error) {
       setError(error);
@@ -34,6 +37,7 @@ function App() {
       setAddress(accounts[0]);
       setError(null);
       checkNetwork();
+      setError(null);
     } catch (error) {
       setError(error.message);
     }
@@ -63,7 +67,11 @@ function App() {
         {address ? (
           <div>
             {netWork ? (
-              <Form sender={address} provider={provider}></Form>
+              <Form
+                sender={address}
+                provider={provider}
+                checkNetwork={checkNetwork}
+              ></Form>
             ) : (
               <div>
                 <p>Your are not connected to goreli network</p>
