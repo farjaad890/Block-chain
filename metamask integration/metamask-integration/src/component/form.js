@@ -9,9 +9,11 @@ const LoginForm = (props) => {
   const [error, setError] = useState("");
   const [transaction, setTransaction] = useState({});
 
-  provider.on("chainChanged", function (chainId) {
+  provider.on("chainChanged", function (chain) {
+    //console.log(chain);
     checkNetwork();
   });
+
 
   //this is a async function to get the information of the transaction through transaction hash
   async function getTransactionreceipt(hash) {
@@ -34,7 +36,8 @@ const LoginForm = (props) => {
   }
 
   //transfer function is called when the transfers button is clucked on the screen
-  async function tranfer() {
+  async function tranfer(e) {
+    e.preventDefault();
     try {
       //first the amount is converted from text to float
       let calculatedWei = convertTowei(parseFloat(amount));
@@ -68,7 +71,10 @@ const LoginForm = (props) => {
   return (
     <div className="w-full max-w-xs mx-auto">
       <h1 className="text-center">Transfer form</h1>
-      <form className="bg-cyan-200 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <form
+        className="bg-cyan-200 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        onSubmit={tranfer}
+      >
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Address
@@ -78,6 +84,7 @@ const LoginForm = (props) => {
             id="username"
             type="text"
             placeholder="address"
+            required
             value={receiver}
             onChange={(event) => {
               setReceiver(event.target.value);
@@ -94,6 +101,7 @@ const LoginForm = (props) => {
             type="text"
             placeholder="Amount"
             value={amount}
+            required
             onChange={(event) => {
               setAmount(event.target.value);
             }}
@@ -102,8 +110,8 @@ const LoginForm = (props) => {
         <div className="flex items-center justify-between">
           <button
             className="bg-cyan-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-            type="button"
-            onClick={() => {
+            type="submit"
+            onSubmit={() => {
               tranfer();
             }}
           >
